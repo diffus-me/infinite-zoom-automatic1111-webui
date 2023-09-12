@@ -14,6 +14,8 @@ from .sd_helpers import renderImg2Img, renderTxt2Img
 from .image import shrink_and_paste_on_blank
 from .video import write_video
 
+import gradio as gr
+
 
 def crop_fethear_ellipse(image, feather_margin=30, width_offset=0, height_offset=0):
     # Create a blank mask image with the same size as the original image
@@ -68,6 +70,7 @@ def crop_fethear_ellipse(image, feather_margin=30, width_offset=0, height_offset
 
 
 def outpaint_steps(
+    request: gr.Request,
     width,
     height,
     common_prompt_pre,
@@ -92,6 +95,8 @@ def outpaint_steps(
     frame_correction=True,  # TODO: add frame_Correction in UI
 ):
     main_frames = [init_img.convert("RGB")]
+
+    processed = None
 
     for i in range(outpaint_steps):
         print_out = (
@@ -122,6 +127,7 @@ def outpaint_steps(
         else:
             pr = prompts[max(k for k in prompts.keys() if k <= i)]
             processed, newseed = renderImg2Img(
+                request,
                 f"{common_prompt_pre}\n{pr}\n{common_prompt_suf}".strip(),
                 negative_prompt,
                 sampler,
@@ -166,6 +172,7 @@ def outpaint_steps(
 
 
 def create_zoom(
+    request: gr.Request,
     common_prompt_pre,
     prompts_array,
     common_prompt_suf,
@@ -195,9 +202,11 @@ def create_zoom(
     inpainting_padding=0,
     progress=None,
 ):
+    result = [None, None, "", "", ""]
     for i in range(batchcount):
         print(f"Batch {i+1}/{batchcount}")
         result = create_zoom_single(
+            request,
             common_prompt_pre,
             prompts_array,
             common_prompt_suf,
@@ -289,6 +298,7 @@ def crop_inner_image(outpainted_img, width_offset, height_offset):
 
 
 def create_zoom_single(
+    request: gr.Request,
     common_prompt_pre,
     prompts_array,
     common_prompt_suf,
@@ -360,6 +370,7 @@ def create_zoom_single(
 
         pr = prompts[min(k for k in prompts.keys() if k >= 0)]
         processed, newseed = renderTxt2Img(
+            request,
             f"{common_prompt_pre}\n{pr}\n{common_prompt_suf}".strip(),
             negative_prompt,
             sampler,
@@ -388,6 +399,7 @@ def create_zoom_single(
         "infzoom_inpainting_model", progress, "Loading Model for inpainting/img2img: "
     )
     main_frames, processed = outpaint_steps(
+        request,
         width,
         height,
         common_prompt_pre,

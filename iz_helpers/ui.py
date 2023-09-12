@@ -269,7 +269,7 @@ Our best experience and trade-off is the R-ERSGAn4x upscaler.
                 html_log = output_panel.html_log
 
         generate_btn.click(
-            fn=wrap_gradio_gpu_call(create_zoom, extra_outputs=[None, "", ""]),
+            fn=wrap_gradio_gpu_call(create_zoom, extra_outputs=[None, None, "", ""]),
             inputs=[
                 main_common_prompt_pre,
                 main_prompts,
@@ -304,7 +304,6 @@ Our best experience and trade-off is the R-ERSGAn4x upscaler.
         )
 
         interrupt.click(fn=lambda: shared.state.interrupt(), inputs=[], outputs=[])
-    infinite_zoom_interface.queue()
     return [(infinite_zoom_interface, "Infinite Zoom", "iz_interface")]
 
 
