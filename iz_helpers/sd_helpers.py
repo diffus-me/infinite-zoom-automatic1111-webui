@@ -5,9 +5,11 @@ from modules.processing import (
 )
 import modules.shared as shared
 
+import gradio as gr
+
 
 def renderTxt2Img(
-    prompt, negative_prompt, sampler, steps, cfg_scale, seed, width, height
+    request: gr.Request, prompt, negative_prompt, sampler, steps, cfg_scale, seed, width, height
 ):
     processed = None
     p = StableDiffusionProcessingTxt2Img(
@@ -24,12 +26,14 @@ def renderTxt2Img(
         width=width,
         height=height,
     )
+    p.set_request(request)
     processed = process_images(p)
     newseed = p.seed
     return processed, newseed
 
 
 def renderImg2Img(
+    request: gr.Request,
     prompt,
     negative_prompt,
     sampler,
@@ -70,7 +74,8 @@ def renderImg2Img(
         mask=mask_image,
     )
     # p.latent_mask = Image.new("RGB", (p.width, p.height), "white")
-    
+    p.set_request(request)
+
     processed = process_images(p)
     # For those that use Image grids this will make sure that ffmpeg does not crash out
     if (len(processed.images) > 1) and (processed.images[0].size[0] != processed.images[-1].size[0]):
