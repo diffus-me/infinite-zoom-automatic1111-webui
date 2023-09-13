@@ -197,6 +197,7 @@ def create_zoom(
     upscale_do,
     upscaler_name,
     upscale_by,
+    main_sd_model,
     inpainting_denoising_strength=1,
     inpainting_full_res=0,
     inpainting_padding=0,
@@ -230,6 +231,7 @@ def create_zoom(
             upscale_do,
             upscaler_name,
             upscale_by,
+            main_sd_model,
             inpainting_denoising_strength,
             inpainting_full_res,
             inpainting_padding,
@@ -322,6 +324,7 @@ def create_zoom_single(
     upscale_do,
     upscaler_name,
     upscale_by,
+    main_sd_model,
     inpainting_denoising_strength,
     inpainting_full_res,
     inpainting_padding,
@@ -365,7 +368,10 @@ def create_zoom_single(
 
     else:
         load_model_from_setting(
-            "infzoom_txt2img_model", progress, "Loading Model for txt2img: "
+            "infzoom_txt2img_model",
+            progress,
+            "Loading Model for txt2img: ",
+            specified_model=main_sd_model
         )
 
         pr = prompts[min(k for k in prompts.keys() if k >= 0)]
@@ -396,7 +402,10 @@ def create_zoom_single(
         progress(0, desc="upscaling inital image")
 
     load_model_from_setting(
-        "infzoom_inpainting_model", progress, "Loading Model for inpainting/img2img: "
+        "infzoom_inpainting_model",
+        progress,
+        "Loading Model for inpainting/img2img: ",
+        specified_model=main_sd_model
     )
     main_frames, processed = outpaint_steps(
         request,

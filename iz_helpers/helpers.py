@@ -24,7 +24,7 @@ def closest_upper_divisible_by_eight(num):
         return math.ceil(num / 8) * 8
 
 
-def load_model_from_setting(model_field_name, progress, progress_desc):
+def load_model_from_setting(model_field_name, progress, progress_desc, specified_model=None):
     # fix typo in Automatic1111 vs Vlad111
     if hasattr(modules.sd_models, "checkpoint_alisases"):
         checkPList = modules.sd_models.checkpoint_alisases
@@ -35,7 +35,11 @@ def load_model_from_setting(model_field_name, progress, progress_desc):
             "This is not a compatible StableDiffusion Platform, can not access checkpoints"
         )
 
-    model_name = shared.opts.data.get(model_field_name)
+    if specified_model:
+        model_name = specified_model
+    else:
+        model_name = shared.opts.data.get(model_field_name)
+
     if model_name is not None and model_name != "":
         checkinfo = checkPList[model_name]
 
