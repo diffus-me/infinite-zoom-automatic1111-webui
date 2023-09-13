@@ -76,6 +76,9 @@ def on_ui_tabs():
                         value=jpr["negPrompt"], label="Negative Prompt"
                     )
 
+                    main_sd_model = gr.Textbox(
+                        label="stable diffusion checkpoints", value="", visible=False, elem_id="infzoom_sd_model")
+
                     # these button will be moved using JS under the dataframe view as small ones
                     exportPrompts_button = gr.Button(
                         value="Export prompts",
@@ -295,6 +298,7 @@ Our best experience and trade-off is the R-ERSGAn4x upscaler.
                 upscale_do,
                 upscaler_name,
                 upscale_by,
+                main_sd_model,
             ],
             outputs=[output_video, out_image, generation_info, html_info, html_log],
         )
