@@ -173,6 +173,7 @@ def outpaint_steps(
 
 def create_zoom(
     request: gr.Request,
+    id_task,
     common_prompt_pre,
     prompts_array,
     common_prompt_suf,
@@ -205,7 +206,7 @@ def create_zoom(
 ):
     result = [None, None, "", "", ""]
     for i in range(batchcount):
-        print(f"Batch {i+1}/{batchcount}")
+        print(f"{id_task}: Batch {i+1}/{batchcount}")
         result = create_zoom_single(
             request,
             common_prompt_pre,

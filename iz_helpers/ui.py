@@ -32,6 +32,7 @@ def on_ui_tabs():
         with gr.Row():
             generate_btn = gr.Button(value="Generate video", variant="primary")
             interrupt = gr.Button(value="Interrupt", elem_id="interrupt_training")
+            id_task = gr.Label(visible=False)
         with gr.Row():
             with gr.Column(scale=1, variant="panel"):
                 with gr.Tab("Main"):
@@ -265,7 +266,9 @@ Our best experience and trade-off is the R-ERSGAn4x upscaler.
 
         generate_btn.click(
             fn=wrap_gradio_gpu_call(create_zoom, extra_outputs=[None, None, "", ""]),
+            _js="iz_submit",
             inputs=[
+                id_task,
                 main_common_prompt_pre,
                 main_prompts,
                 main_common_prompt_suf,
