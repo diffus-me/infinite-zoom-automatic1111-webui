@@ -183,7 +183,7 @@ def on_ui_tabs():
                         minimum=1,
                         maximum=60,
                     )
-                    video_zoom_mode = gr.Radio(
+                    video_zoom_mode = gr.Dropdown(
                         label="Zoom mode",
                         choices=["Zoom-out", "Zoom-in"],
                         value="Zoom-out",
@@ -219,7 +219,7 @@ def on_ui_tabs():
                         maximum=64,
                         value=default_mask_blur,
                     )
-                    inpainting_fill_mode = gr.Radio(
+                    inpainting_fill_mode = gr.Dropdown(
                         label="Masked content",
                         choices=["fill", "original", "latent noise", "latent nothing"],
                         value="latent noise",
