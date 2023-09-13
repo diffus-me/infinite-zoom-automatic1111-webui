@@ -20,6 +20,15 @@ function exportPrompts(cppre,p, cpsuf,np, filename = "infinite-zoom-prompts.json
     }
 }
 
+function iz_submit() {
+    var id = randomId();
+    localStorage.setItem("iz_task_id", id);
+
+    var res = Array.from(arguments);
+    res[0] = id;
+    return res;
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     const onload = () => {
 
