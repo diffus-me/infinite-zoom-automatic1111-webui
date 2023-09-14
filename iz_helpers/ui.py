@@ -59,7 +59,7 @@ def on_ui_tabs():
                             None,
                             inputs=[],
                             outputs=[main_outpaint_steps],
-                            _js="monitorThisParam('tab_iz_interface', 'extensions.infinite_zoom', 'batch_size')")
+                            _js="monitorThisParam('tab_iz_interface', 'extensions.infinite_zoom', 'batch_size', extractor = (x) => x + 1)")
 
                     # safe reading json prompt
                     pr = shared.opts.data.get("infzoom_defPrompt", default_prompt)
