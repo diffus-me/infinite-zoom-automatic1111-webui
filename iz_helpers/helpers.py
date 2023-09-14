@@ -49,7 +49,8 @@ def load_model_from_setting(model_field_name, progress, progress_desc, specified
         if progress:
             progress(0, desc=progress_desc + checkinfo.name)
 
-        modules.sd_models.load_model(checkinfo)
+        if not shared.sd_model or shared.sd_model.sd_checkpoint_info.title != model_name:
+            modules.sd_models.load_model(checkinfo)
 
 
 def do_upscaleImg(curImg, upscale_do, upscaler_name, upscale_by):
