@@ -16,4 +16,24 @@ function monitorMainModelSelectionInfniteZoom() {
   observer.observe(sdCheckpointDropdown, config);
 }
 
-onUiLoaded(monitorMainModelSelectionInfniteZoom);
+onUiLoaded(() => {
+  monitorMainModelSelectionInfniteZoom();
+  systemMonitorState["tab_iz_interface"] = {
+    generate_button_id: "iz_submit_button",
+    timeout_id: null,
+    functions: {
+      "extensions.infinite_zoom": {
+        params: {
+          'steps': 35,
+          'n_iter': 1,
+          'batch_size': 5,
+          "width": 512,
+          "height": 512,
+        },
+        link_params: {}, // tab_name: function_name
+        mutipliers: {}, // multipler_name: value
+        link_mutipliers: {}, // function_name: param_name
+      }
+    }
+  };
+});
