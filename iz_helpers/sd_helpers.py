@@ -2,8 +2,12 @@ from modules.processing import (
     process_images,
     StableDiffusionProcessingTxt2Img,
     StableDiffusionProcessingImg2Img,
+    build_decoded_params_from_processing,
+    get_function_name_from_processing
 )
 import modules.shared as shared
+from modules.system_monitor import (
+    generate_function_name, monitor_call_context)
 
 import gradio as gr
 
@@ -27,7 +31,12 @@ def renderTxt2Img(
         height=height,
     )
     p.set_request(request)
-    processed = process_images(p)
+    with monitor_call_context(
+            request,
+            get_function_name_from_processing(p),
+            generate_function_name(renderTxt2Img),
+            decoded_params=build_decoded_params_from_processing(p)):
+        processed = process_images(p)
     newseed = p.seed
     return processed, newseed
 
@@ -76,7 +85,12 @@ def renderImg2Img(
     # p.latent_mask = Image.new("RGB", (p.width, p.height), "white")
     p.set_request(request)
 
-    processed = process_images(p)
+    with monitor_call_context(
+            request,
+            get_function_name_from_processing(p),
+            generate_function_name(renderImg2Img),
+            decoded_params=build_decoded_params_from_processing(p)):
+        processed = process_images(p)
     # For those that use Image grids this will make sure that ffmpeg does not crash out
     if (len(processed.images) > 1) and (processed.images[0].size[0] != processed.images[-1].size[0]):
         processed.images.pop(0)
