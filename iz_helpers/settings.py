@@ -7,7 +7,7 @@ def on_ui_settings():
     section = ("infinite-zoom", "Infinite Zoom")
 
     shared.opts.add_option(
-        "infzoom_outpath",
+        "infinite-zooms",
         shared.OptionInfo(
             "outputs",
             "Path where to store your infinite video. Default is Outputs",
@@ -20,7 +20,7 @@ def on_ui_settings():
     shared.opts.add_option(
         "infzoom_outSUBpath",
         shared.OptionInfo(
-            "infinite-zooms",
+            "videos",
             "Which subfolder name to be created in the outpath. Default is 'infinite-zooms'",
             gr.Textbox,
             {"interactive": True},

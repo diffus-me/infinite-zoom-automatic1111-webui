@@ -4,6 +4,7 @@ from PIL import Image, ImageFilter, ImageDraw
 from modules.ui import plaintext_to_html
 import modules.shared as shared
 from modules.paths_internal import script_path
+from modules.paths import Paths
 from .helpers import (
     fix_env_Path_ffprobe,
     closest_upper_divisible_by_eight,
@@ -241,27 +242,25 @@ def create_zoom(
     return result
 
 
-def prepare_output_path():
+def prepare_output_path(request: gr.Request):
+    paths = Paths(request)
     isCollect = shared.opts.data.get("infzoom_collectAllResources", False)
-    output_path = shared.opts.data.get("infzoom_outpath", "outputs")
+    output_path = paths.private_outdir().joinpath("infinite-zooms")
 
-    save_path = os.path.join(
-        output_path, shared.opts.data.get("infzoom_outSUBpath", "infinite-zooms")
-    )
+    save_path = output_path.joinpath("videos")
 
     if isCollect:
-        save_path = os.path.join(save_path, "iz_collect" + str(int(time.time())))
+        save_path = save_path.joinpath("iz_collect" + str(int(time.time())))
 
-    if not os.path.exists(save_path):
-        os.makedirs(save_path)
+    paths._check_dir(save_path)
 
     video_filename = os.path.join(
-        save_path, "infinite_zoom_" + str(int(time.time())) + ".mp4"
+        str(save_path), "infinite_zoom_" + str(int(time.time())) + ".mp4"
     )
 
     return {
         "isCollect": isCollect,
-        "save_path": save_path,
+        "save_path": str(save_path),
         "video_filename": video_filename,
     }
 
@@ -338,7 +337,7 @@ def create_zoom_single(
     # except Exception:
     #     pass
     fix_env_Path_ffprobe()
-    out_config = prepare_output_path()
+    out_config = prepare_output_path(request)
 
     prompts = {}
 
