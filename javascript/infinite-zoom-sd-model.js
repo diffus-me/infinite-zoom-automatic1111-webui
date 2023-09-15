@@ -16,7 +16,7 @@ function monitorMainModelSelectionInfniteZoom() {
   observer.observe(sdCheckpointDropdown, config);
 }
 
-onUiLoaded(() => {
+onUiLoaded(async function() {
   monitorMainModelSelectionInfniteZoom();
   systemMonitorState["tab_iz_interface"] = {
     generate_button_id: "iz_submit_button",
@@ -26,7 +26,7 @@ onUiLoaded(() => {
         params: {
           'steps': 35,
           'n_iter': 1,
-          'batch_size': 5,
+          'batch_size': 6,
           "width": 512,
           "height": 512,
         },
@@ -36,4 +36,5 @@ onUiLoaded(() => {
       }
     }
   };
+  await updateButton("tab_iz_interface");
 });
