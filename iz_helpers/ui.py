@@ -20,15 +20,6 @@ from .static_variables import promptTableHeaders
 
 def on_ui_tabs():
     with gr.Blocks(analytics_enabled=False) as infinite_zoom_interface:
-        gr.HTML(
-            """
-            <p style="text-align: center;">
-                <a target="_blank" href="https://github.com/v8hid/infinite-zoom-automatic1111-webui"><img src="https://img.shields.io/static/v1?label=github&message=repository&color=blue&style=flat&logo=github&logoColor=white" style="display: inline;" alt="GitHub Repo"/></a>
-                <a href="https://discord.gg/v2nHqSrWdW"><img src="https://img.shields.io/discord/1095469311830806630?color=blue&label=discord&logo=discord&logoColor=white" style="display: inline;" alt="Discord server"></a>
-            </p>
-
-            """
-        )
         with gr.Row():
             generate_btn = gr.Button(value="Generate video", variant="primary", elem_id="iz_submit_button")
             interrupt = gr.Button(value="Interrupt", elem_id="interrupt_training")
@@ -277,6 +268,15 @@ Depending on amount of frames and which upscaler you choose it might took a long
 Our best experience and trade-off is the R-ERSGAn4x upscaler.
 """
                         )
+                gr.HTML(
+                    """
+                    <p style="text-align: left; display: flex;">
+                        <a target="_blank" href="https://github.com/v8hid/infinite-zoom-automatic1111-webui"><img src="https://img.shields.io/static/v1?label=github&message=repository&color=blue&style=flat&logo=github&logoColor=white" style="display: inline;" alt="GitHub Repo"/></a>
+                        <a href="https://discord.gg/v2nHqSrWdW"><img src="https://img.shields.io/discord/1095469311830806630?color=blue&label=discord&logo=discord&logoColor=white" style="display: inline;" alt="Discord server"></a>
+                    </p>
+
+                    """
+                )
 
             with gr.Column(scale=1, variant="compact"):
                 output_video = gr.Video(label="Output", width=512, height=512)
