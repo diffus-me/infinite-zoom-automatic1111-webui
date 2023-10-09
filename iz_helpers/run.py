@@ -1,3 +1,4 @@
+import datetime
 import math, time, os
 import numpy as np
 from PIL import Image, ImageFilter, ImageDraw
@@ -244,13 +245,14 @@ def create_zoom(
 
 def prepare_output_path(request: gr.Request):
     paths = Paths(request)
-    isCollect = shared.opts.data.get("infzoom_collectAllResources", False)
+    isCollect = shared.opts.data.get("infzoom_collectAllResources", True)
     output_path = paths.private_outdir().joinpath("infinite-zooms")
 
     save_path = output_path.joinpath("videos")
 
     if isCollect:
-        save_path = save_path.joinpath("iz_collect" + str(int(time.time())))
+        now = datetime.datetime.now()
+        save_path = save_path.joinpath(now.strftime('%Y-%m-%d'))
 
     paths._check_dir(save_path)
 
