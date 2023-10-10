@@ -1,22 +1,28 @@
 import datetime
-import math, time, os
+import math
+import os
+import pathlib
+import shutil
+import time
+import uuid
+
+import gradio as gr
 import numpy as np
 from PIL import Image, ImageFilter, ImageDraw
-from modules.ui import plaintext_to_html
+
 import modules.shared as shared
-from modules.paths_internal import script_path
 from modules.paths import Paths
+from modules.paths_internal import script_path
+from modules.ui import plaintext_to_html
 from .helpers import (
     fix_env_Path_ffprobe,
     closest_upper_divisible_by_eight,
     load_model_from_setting,
     do_upscaleImg,
 )
-from .sd_helpers import renderImg2Img, renderTxt2Img
 from .image import shrink_and_paste_on_blank
+from .sd_helpers import renderImg2Img, renderTxt2Img
 from .video import write_video
-
-import gradio as gr
 
 
 def crop_fethear_ellipse(image, feather_margin=30, width_offset=0, height_offset=0):
@@ -259,10 +265,11 @@ def prepare_output_path(request: gr.Request):
     video_filename = os.path.join(
         str(save_path), "infinite_zoom_" + str(int(time.time())) + ".mp4"
     )
-
+    img_save_to = f'/tmp/infinite-zooms/{uuid.uuid4().hex}'
+    pathlib.Path(img_save_to).mkdir(exist_ok=True, parents=True)
     return {
         "isCollect": isCollect,
-        "save_path": str(save_path),
+        "save_path": img_save_to,
         "video_filename": video_filename,
     }
 
@@ -526,6 +533,8 @@ def create_zoom_single(
         int(video_last_frame_dupe_amount),
     )
     print("Video saved in: " + os.path.join(script_path, out_config["video_filename"]))
+    shutil.rmtree(out_config["save_path"], ignore_errors=True)
+
     return (
         out_config["video_filename"],
         main_frames,
