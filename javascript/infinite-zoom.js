@@ -20,7 +20,9 @@ function exportPrompts(cppre,p, cpsuf,np, filename = "infinite-zoom-prompts.json
     }
 }
 
-function iz_submit() {
+async function iz_submit() {
+    await tierCheckButtonInternal("InfiniteZoom");
+
     var id = randomId();
     localStorage.setItem("iz_task_id", id);
 
