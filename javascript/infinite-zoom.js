@@ -28,6 +28,17 @@ async function iz_submit() {
 
     var res = Array.from(arguments);
     res[0] = id;
+    const creditsInfoStr= document.querySelector("#iz_submit_button > span");
+    if (typeof extractNumberFromGenerateButton === "function" && creditsInfoStr) {
+      const credits = extractNumberFromGenerateButton(creditsInfoStr.textContent);
+      if (credits && typeof gtag === "function") {
+        gtag("event", "spend_virtual_currency", {
+          value: credits,
+          virtual_currency_name: "credits",
+          item_name: "iz_submit_button"
+        });
+      }
+    }
     return res;
 }
 
