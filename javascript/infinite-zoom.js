@@ -21,6 +21,7 @@ function exportPrompts(cppre,p, cpsuf,np, filename = "infinite-zoom-prompts.json
 }
 
 async function iz_submit() {
+    addGenerateGtagEvent("#iz_submit_button > span", "#iz_generate_button");
     await tierCheckButtonInternal("InfiniteZoom");
 
     var id = randomId();
