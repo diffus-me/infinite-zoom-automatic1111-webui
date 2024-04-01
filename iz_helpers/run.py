@@ -1,3 +1,4 @@
+from datetime import datetime
 import math, time, os
 import numpy as np
 from PIL import Image, ImageFilter, ImageDraw
@@ -247,8 +248,9 @@ def prepare_output_path(request: gr.Request):
     isCollect = shared.opts.data.get("infzoom_collectAllResources", False)
     output_path = paths.private_outdir().joinpath("infinite-zooms")
 
-    save_path = output_path.joinpath("videos")
+    save_path = output_path / "videos" / datetime.now().strftime('%Y-%m-%d')
 
+    isCollect = False
     if isCollect:
         save_path = save_path.joinpath("iz_collect" + str(int(time.time())))
 
