@@ -283,6 +283,8 @@ Our best experience and trade-off is the R-ERSGAn4x upscaler.
                 output_panel = create_output_panel(
                     "infinite-zoom", shared.opts.outdir_img2img_samples
                 )
+                upgrade_info = gr.JSON(value={}, interactive=False, visible=False)
+                upgrade_info.change(None, [upgrade_info], None, _js="upgradeCheck")
 
             if isinstance(output_panel, tuple):
                 (
@@ -298,7 +300,7 @@ Our best experience and trade-off is the R-ERSGAn4x upscaler.
                 html_log = output_panel.html_log
 
         generate_btn.click(
-            fn=wrap_gradio_gpu_call(create_zoom, extra_outputs=[None, None, "", ""]),
+            fn=wrap_gradio_gpu_call(create_zoom, extra_outputs=[None, None, "", ""], add_monitor_state=True),
             _js="iz_submit",
             inputs=[
                 id_task,
@@ -328,7 +330,7 @@ Our best experience and trade-off is the R-ERSGAn4x upscaler.
                 upscale_by,
                 main_sd_model,
             ],
-            outputs=[output_video, out_image, generation_info, html_info, html_log],
+            outputs=[output_video, out_image, generation_info, html_info, html_log, upgrade_info],
         )
 
         main_prompts.change(
