@@ -300,7 +300,12 @@ Our best experience and trade-off is the R-ERSGAn4x upscaler.
                 html_log = output_panel.html_log
 
         generate_btn.click(
-            fn=wrap_gradio_gpu_call(create_zoom, extra_outputs=[None, None, "", ""], add_monitor_state=True),
+            fn=wrap_gradio_gpu_call(
+                create_zoom,
+                func_name="infinite_zoom",
+                extra_outputs=[None, None, "", ""],
+                add_monitor_state=True
+            ),
             _js="iz_submit",
             inputs=[
                 id_task,
