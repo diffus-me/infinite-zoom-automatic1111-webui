@@ -32,11 +32,13 @@ def renderTxt2Img(
     )
     p.set_request(request)
     with monitor_call_context(
-            request,
-            get_function_name_from_processing(p),
-            generate_function_name(renderTxt2Img),
-            decoded_params=build_decoded_params_from_processing(p),
-            only_available_for=["plus", "pro", "api"]):
+        request,
+        get_function_name_from_processing(p),
+        generate_function_name(renderTxt2Img),
+        decoded_params=build_decoded_params_from_processing(p),
+        feature_type="buttons",
+        feature_name="InfiniteZoom",
+    ):
         processed = process_images(p)
     newseed = p.seed
     return processed, newseed
@@ -87,11 +89,13 @@ def renderImg2Img(
     p.set_request(request)
 
     with monitor_call_context(
-            request,
-            get_function_name_from_processing(p),
-            generate_function_name(renderImg2Img),
-            decoded_params=build_decoded_params_from_processing(p),
-            only_available_for=["plus", "pro", "api"]):
+        request,
+        get_function_name_from_processing(p),
+        generate_function_name(renderImg2Img),
+        decoded_params=build_decoded_params_from_processing(p),
+        feature_type="buttons",
+        feature_name="InfiniteZoom",
+    ):
         processed = process_images(p)
     # For those that use Image grids this will make sure that ffmpeg does not crash out
     if (len(processed.images) > 1) and (processed.images[0].size[0] != processed.images[-1].size[0]):
