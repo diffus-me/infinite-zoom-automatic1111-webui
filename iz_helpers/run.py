@@ -176,6 +176,7 @@ def outpaint_steps(
 def create_zoom(
     request: gr.Request,
     id_task,
+    model_title: str,
     common_prompt_pre,
     prompts_array,
     common_prompt_suf,
@@ -200,12 +201,16 @@ def create_zoom(
     upscale_do,
     upscaler_name,
     upscale_by,
-    main_sd_model,
     inpainting_denoising_strength=1,
     inpainting_full_res=0,
     inpainting_padding=0,
     progress=None,
 ):
+    model_title_prefix = 'model_title('
+    if model_title.startswith(model_title_prefix) and model_title.endswith(')'):
+        main_sd_model = model_title[len(model_title_prefix):-1]
+    else:
+        main_sd_model = model_title
     result = [None, None, "", "", ""]
     for i in range(batchcount):
         print(f"{id_task}: Batch {i+1}/{batchcount}")

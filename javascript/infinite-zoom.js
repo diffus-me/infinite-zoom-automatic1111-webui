@@ -27,8 +27,12 @@ async function iz_submit() {
     var id = randomId();
     localStorage.setItem("iz_task_id", id);
 
+    const mainModel = gradioApp().querySelector("#sd_model_checkpoint_dropdown input");
+
     var res = Array.from(arguments);
     res[0] = id;
+    res[1] = `model_title${mainModel.value}`;
+
     return res;
 }
 
