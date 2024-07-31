@@ -309,6 +309,7 @@ Our best experience and trade-off is the R-ERSGAn4x upscaler.
             _js="iz_submit",
             inputs=[
                 id_task,
+                main_sd_model,
                 main_common_prompt_pre,
                 main_prompts,
                 main_common_prompt_suf,
@@ -333,7 +334,6 @@ Our best experience and trade-off is the R-ERSGAn4x upscaler.
                 upscale_do,
                 upscaler_name,
                 upscale_by,
-                main_sd_model,
             ],
             outputs=[output_video, out_image, generation_info, html_info, html_log, upgrade_info],
         )
