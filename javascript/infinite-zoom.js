@@ -20,6 +20,21 @@ function exportPrompts(cppre,p, cpsuf,np, filename = "infinite-zoom-prompts.json
     }
 }
 
+function _make_value_source(value) {
+    return {value: value, source: "infinite_zoom"};
+}
+
+async function iz_get_all_model_info(model_title, res) {
+    const checkpoint_titles = [_make_value_source(model_title)];
+    const prompts = [
+        _make_value_source(res[3]),
+        _make_value_source(res[5]),
+        _make_value_source(res[6]),
+        ...res[4].data.map((item) => _make_value_source(item[1]))
+    ];
+    return await getAllModelInfoByCheckpointsAndPrompts(checkpoint_titles, prompts);
+}
+
 async function iz_submit() {
     addGenerateGtagEvent("#iz_submit_button > span", "#iz_generate_button");
     await tierCheckButtonInternal("InfiniteZoom");
@@ -32,6 +47,7 @@ async function iz_submit() {
     var res = Array.from(arguments);
     res[0] = id;
     res[1] = `model_title(${mainModel.value})`;
+    res[2] = JSON.stringify(await iz_get_all_model_info(mainModel.value, res));
 
     return res;
 }
