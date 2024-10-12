@@ -7,6 +7,8 @@ import modules.shared as shared
 from modules.paths_internal import script_path
 from modules.paths import Paths
 from modules.model_info import AllModelInfo
+from modules import script_callbacks
+
 from .helpers import (
     fix_env_Path_ffprobe,
     closest_upper_divisible_by_eight,
@@ -101,6 +103,8 @@ def outpaint_steps(
     main_frames = [init_img.convert("RGB")]
 
     processed = None
+    p = None
+    used_models = {}
 
     for i in range(outpaint_steps):
         print_out = (
@@ -130,7 +134,7 @@ def outpaint_steps(
             save2Collect(current_image, out_config, f"exit_img.png")
         else:
             pr = prompts[max(k for k in prompts.keys() if k <= i)]
-            processed, newseed = renderImg2Img(
+            processed, newseed, p = renderImg2Img(
                 request,
                 f"{common_prompt_pre}\n{pr}\n{common_prompt_suf}".strip(),
                 negative_prompt,
@@ -149,6 +153,8 @@ def outpaint_steps(
                 inpainting_padding,
                 all_model_info,
             )
+
+            _update_used_models(used_models, p.used_models)
 
             if len(processed.images) > 0:
                 main_frames.append(processed.images[0].convert("RGB"))
@@ -173,7 +179,9 @@ def outpaint_steps(
             main_frames[i] = corrected_frame
         # else :TEST
         # current_image.paste(prev_image, mask=prev_image)
-    return main_frames, processed
+
+    p.used_models = used_models
+    return main_frames, processed, p
 
 
 def create_zoom(
@@ -311,6 +319,14 @@ def crop_inner_image(outpainted_img, width_offset, height_offset):
     return prev_step_img
 
 
+def _update_used_models(old: dict[str, list[str]], new: dict[str, list[str]]) -> None:
+    for key, value in new.items():
+        if key not in old:
+            old[key] = list(value)
+        else:
+            old[key].extend(value)
+
+
 def create_zoom_single(
     request: gr.Request,
     common_prompt_pre,
@@ -375,6 +391,7 @@ def create_zoom_single(
 
     all_model_info = AllModelInfo(raw_model_info)
     all_model_info.check_file_existence()
+    used_models = {}
 
     if custom_init_image:
         current_image = custom_init_image.resize(
@@ -392,7 +409,7 @@ def create_zoom_single(
         )
 
         pr = prompts[min(k for k in prompts.keys() if k >= 0)]
-        processed, newseed = renderTxt2Img(
+        processed, newseed, p = renderTxt2Img(
             request,
             f"{common_prompt_pre}\n{pr}\n{common_prompt_suf}".strip(),
             negative_prompt,
@@ -404,6 +421,9 @@ def create_zoom_single(
             height,
             all_model_info,
         )
+
+        _update_used_models(used_models, p.used_models)
+
         if len(processed.images) > 0:
             current_image = processed.images[0]
             save2Collect(current_image, out_config, f"init_txt2img.png")
@@ -426,7 +446,7 @@ def create_zoom_single(
         all_model_info,
         specified_model=main_sd_model
     )
-    main_frames, processed = outpaint_steps(
+    main_frames, processed, p = outpaint_steps(
         request,
         width,
         height,
@@ -451,6 +471,9 @@ def create_zoom_single(
         custom_exit_image,
         all_model_info,
     )
+
+    _update_used_models(p.used_models, used_models)
+
     all_frames.append(
         do_upscaleImg(main_frames[0], upscale_do, upscaler_name, upscale_by)
         if upscale_do
@@ -542,6 +565,12 @@ def create_zoom_single(
         video_zoom_mode,
         int(video_start_frame_dupe_amount),
         int(video_last_frame_dupe_amount),
+    )
+    p.feature = "INFINITE_ZOOM"
+    script_callbacks.image_saved_callback(
+        script_callbacks.ImageSaveParams(
+            None, p, out_config["video_filename"], {"parameters": processed.info}
+        )
     )
     print("Video saved in: " + os.path.join(script_path, out_config["video_filename"]))
     return (
