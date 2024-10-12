@@ -13,7 +13,7 @@ import gradio as gr
 
 
 def renderTxt2Img(
-    request: gr.Request, prompt, negative_prompt, sampler, steps, cfg_scale, seed, width, height
+    request: gr.Request, prompt, negative_prompt, sampler, steps, cfg_scale, seed, width, height, all_model_info
 ):
     processed = None
     p = StableDiffusionProcessingTxt2Img(
@@ -31,6 +31,7 @@ def renderTxt2Img(
         height=height,
     )
     p.set_request(request)
+    p.set_all_model_info(all_model_info)
     with monitor_call_context(
         request,
         get_function_name_from_processing(p),
@@ -61,6 +62,7 @@ def renderImg2Img(
     inpainting_fill_mode,
     inpainting_full_res,
     inpainting_padding,
+    all_model_info,
 ):
     processed = None
 
@@ -87,6 +89,7 @@ def renderImg2Img(
     )
     # p.latent_mask = Image.new("RGB", (p.width, p.height), "white")
     p.set_request(request)
+    p.set_all_model_info(all_model_info)
 
     with monitor_call_context(
         request,

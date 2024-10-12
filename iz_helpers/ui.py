@@ -78,8 +78,11 @@ def on_ui_tabs():
                         value=jpr["negPrompt"], label="Negative Prompt"
                     )
 
+
                     main_sd_model = gr.Textbox(
                         label="stable diffusion checkpoints", value="", visible=False, elem_id="infzoom_sd_model")
+
+                    raw_model_info = gr.Label(visible=False)
 
                     # these button will be moved using JS under the dataframe view as small ones
                     exportPrompts_button = gr.Button(
@@ -310,6 +313,7 @@ Our best experience and trade-off is the R-ERSGAn4x upscaler.
             inputs=[
                 id_task,
                 main_sd_model,
+                raw_model_info,
                 main_common_prompt_pre,
                 main_prompts,
                 main_common_prompt_suf,

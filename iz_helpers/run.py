@@ -6,6 +6,7 @@ from modules.ui import plaintext_to_html
 import modules.shared as shared
 from modules.paths_internal import script_path
 from modules.paths import Paths
+from modules.model_info import AllModelInfo
 from .helpers import (
     fix_env_Path_ffprobe,
     closest_upper_divisible_by_eight,
@@ -94,6 +95,7 @@ def outpaint_steps(
     mask_width,
     mask_height,
     custom_exit_image,
+    all_model_info,
     frame_correction=True,  # TODO: add frame_Correction in UI
 ):
     main_frames = [init_img.convert("RGB")]
@@ -145,6 +147,7 @@ def outpaint_steps(
                 inpainting_fill_mode,
                 inpainting_full_res,
                 inpainting_padding,
+                all_model_info,
             )
 
             if len(processed.images) > 0:
@@ -177,6 +180,7 @@ def create_zoom(
     request: gr.Request,
     id_task,
     model_title: str,
+    raw_model_info: str,
     common_prompt_pre,
     prompts_array,
     common_prompt_suf,
@@ -240,6 +244,7 @@ def create_zoom(
             upscaler_name,
             upscale_by,
             main_sd_model,
+            raw_model_info,
             inpainting_denoising_strength,
             inpainting_full_res,
             inpainting_padding,
@@ -332,6 +337,7 @@ def create_zoom_single(
     upscaler_name,
     upscale_by,
     main_sd_model,
+    raw_model_info,
     inpainting_denoising_strength,
     inpainting_full_res,
     inpainting_padding,
@@ -367,6 +373,9 @@ def create_zoom_single(
     current_image = current_image.convert("RGB")
     current_seed = seed
 
+    all_model_info = AllModelInfo(raw_model_info)
+    all_model_info.check_file_existence()
+
     if custom_init_image:
         current_image = custom_init_image.resize(
             (width, height), resample=Image.LANCZOS
@@ -378,6 +387,7 @@ def create_zoom_single(
             "infzoom_txt2img_model",
             progress,
             "Loading Model for txt2img: ",
+            all_model_info,
             specified_model=main_sd_model
         )
 
@@ -392,6 +402,7 @@ def create_zoom_single(
             current_seed,
             width,
             height,
+            all_model_info,
         )
         if len(processed.images) > 0:
             current_image = processed.images[0]
@@ -412,6 +423,7 @@ def create_zoom_single(
         "infzoom_inpainting_model",
         progress,
         "Loading Model for inpainting/img2img: ",
+        all_model_info,
         specified_model=main_sd_model
     )
     main_frames, processed = outpaint_steps(
@@ -437,6 +449,7 @@ def create_zoom_single(
         mask_width,
         mask_height,
         custom_exit_image,
+        all_model_info,
     )
     all_frames.append(
         do_upscaleImg(main_frames[0], upscale_do, upscaler_name, upscale_by)
