@@ -32,6 +32,9 @@ def renderTxt2Img(
     )
     p.set_request(request)
     p.set_all_model_info(all_model_info)
+    p.do_not_save_samples = True
+    p.do_not_save_grid = True
+
     with monitor_call_context(
         request,
         get_function_name_from_processing(p),
@@ -42,7 +45,7 @@ def renderTxt2Img(
     ):
         processed = process_images(p)
     newseed = p.seed
-    return processed, newseed
+    return processed, newseed, p
 
 
 def renderImg2Img(
@@ -90,6 +93,8 @@ def renderImg2Img(
     # p.latent_mask = Image.new("RGB", (p.width, p.height), "white")
     p.set_request(request)
     p.set_all_model_info(all_model_info)
+    p.do_not_save_samples = True
+    p.do_not_save_grid = True
 
     with monitor_call_context(
         request,
@@ -106,4 +111,4 @@ def renderImg2Img(
         print("\nGrid image detected applying patch")
     
     newseed = p.seed
-    return processed, newseed
+    return processed, newseed, p
