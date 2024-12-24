@@ -23,7 +23,7 @@ def on_ui_tabs():
         with gr.Row():
             generate_btn = gr.Button(value="Generate video", variant="primary", elem_id="iz_submit_button")
             interrupt = gr.Button(value="Interrupt", elem_id="interrupt_training")
-            id_task = gr.Label(visible=False)
+            id_task = gr.Textbox(visible=False)
         with gr.Row():
             with gr.Column(scale=1, variant="panel"):
                 with gr.Tab("Main"):
@@ -82,7 +82,7 @@ def on_ui_tabs():
                     main_sd_model = gr.Textbox(
                         label="stable diffusion checkpoints", value="", visible=False, elem_id="infzoom_sd_model")
 
-                    raw_model_info = gr.Label(visible=False)
+                    raw_model_info = gr.Textbox(visible=False)
 
                     # these button will be moved using JS under the dataframe view as small ones
                     exportPrompts_button = gr.Button(
@@ -286,7 +286,7 @@ Our best experience and trade-off is the R-ERSGAn4x upscaler.
                 output_panel = create_output_panel(
                     "infinite-zoom", shared.opts.outdir_img2img_samples
                 )
-                upgrade_info = gr.JSON(value={}, interactive=False, visible=False)
+                upgrade_info = gr.JSON(value={}, visible=False)
                 upgrade_info.change(None, [upgrade_info], None, _js="upgradeCheck")
 
             if isinstance(output_panel, tuple):
