@@ -7,6 +7,8 @@ from scripts import postprocessing_upscale
 from .prompt_util import readJsonPrompt
 import asyncio
 
+from modules_forge import main_entry
+
 
 def fix_env_Path_ffprobe():
     envpath = os.environ["PATH"]
@@ -32,7 +34,7 @@ def load_model_from_setting(model_field_name, progress, progress_desc, all_model
         model_name = shared.opts.data.get(model_field_name)
 
     if model_name is not None and model_name != "":
-        checkinfo = all_model_info.checkpoint_models[model_name]
+        checkinfo = all_model_info.get_checkpoint_by_title(model_name)
 
         if not checkinfo:
             raise NameError(model_field_name + " Does not exist in your models.")
@@ -40,8 +42,7 @@ def load_model_from_setting(model_field_name, progress, progress_desc, all_model
         if progress:
             progress(0, desc=progress_desc + checkinfo.name)
 
-        if not shared.sd_model or shared.sd_model.sd_checkpoint_info.title != model_name:
-            modules.sd_models.load_model(checkinfo)
+        main_entry.set_forge_checkpoint_info(checkinfo)
 
 
 def do_upscaleImg(curImg, upscale_do, upscaler_name, upscale_by):
