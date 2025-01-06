@@ -42,6 +42,7 @@ def renderTxt2Img(
         decoded_params=build_decoded_params_from_processing(p),
         feature_type="buttons",
         feature_name="InfiniteZoom",
+        is_flux=p.is_flux,
     ):
         processed = process_images(p)
     newseed = p.seed
@@ -103,6 +104,7 @@ def renderImg2Img(
         decoded_params=build_decoded_params_from_processing(p),
         feature_type="buttons",
         feature_name="InfiniteZoom",
+        is_flux=p.is_flux,
     ):
         processed = process_images(p)
     # For those that use Image grids this will make sure that ffmpeg does not crash out
