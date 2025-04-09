@@ -37,7 +37,7 @@ async function iz_get_all_model_info(model_title, res) {
 
 async function iz_submit() {
     addGenerateGtagEvent("#iz_submit_button > span", "#iz_generate_button");
-    await tierCheckButtonInternal("InfiniteZoom");
+    tierCheckButton("InfiniteZoom");
 
     var id = randomId();
     localStorage.setItem("iz_task_id", id);
