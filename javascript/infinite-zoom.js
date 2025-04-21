@@ -36,10 +36,10 @@ async function iz_get_all_model_info(model_title, res) {
 }
 
 async function iz_submit() {
-    addGenerateGtagEvent("#iz_submit_button > span", "#iz_generate_button");
     tierCheckButton("InfiniteZoom");
 
     var id = randomId();
+    idToItemNames[id] = "iz_generate_button";
     localStorage.setItem("iz_task_id", id);
 
     var res = Array.from(arguments);
