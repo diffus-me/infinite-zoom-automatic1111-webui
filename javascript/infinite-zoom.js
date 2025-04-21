@@ -43,7 +43,7 @@ async function iz_submit() {
     localStorage.setItem("iz_task_id", id);
 
     var res = Array.from(arguments);
-    const modelTitle = getDiffusApp().checkpoints.getTitle();
+    const modelTitle = getDiffusCheckpointsApp().getTitle();
 
     res[0] = id;
     res[1] = `model_title(${modelTitle})`;
