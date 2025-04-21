@@ -35,22 +35,12 @@ def on_ui_tabs():
                             step=1,
                             label="Batch Count",
                         )
-                        batchcount_slider.change(
-                            None,
-                            inputs=[],
-                            outputs=[batchcount_slider],
-                            _js="monitorThisParam('tab_iz_interface', 'extensions.infinite_zoom', 'n_iter')")
                         main_outpaint_steps = gr.Number(
                             label="Total video length [s]",
                             value=default_total_outpaints,
                             precision=0,
                             interactive=True,
                         )
-                        main_outpaint_steps.change(
-                            None,
-                            inputs=[],
-                            outputs=[main_outpaint_steps],
-                            _js="monitorThisParam('tab_iz_interface', 'extensions.infinite_zoom', 'batch_size', extractor = (x) => x + 1)")
 
                     # safe reading json prompt
                     pr = shared.opts.data.get("infzoom_defPrompt", default_prompt)
@@ -155,11 +145,6 @@ def on_ui_tabs():
                                 step=16,
                                 label="Output Width",
                             )
-                            main_width.change(
-                                None,
-                                inputs=[],
-                                outputs=[main_width],
-                                _js="monitorThisParam('tab_iz_interface', 'extensions.infinite_zoom', 'width')")
                             main_height = gr.Slider(
                                 minimum=16,
                                 maximum=2048,
@@ -167,11 +152,6 @@ def on_ui_tabs():
                                 step=16,
                                 label="Output Height",
                             )
-                            main_height.change(
-                                None,
-                                inputs=[],
-                                outputs=[main_height],
-                                _js="monitorThisParam('tab_iz_interface', 'extensions.infinite_zoom', 'height')")
                         with gr.Row():
                             main_guidance_scale = gr.Slider(
                                 minimum=0.1,
@@ -187,11 +167,6 @@ def on_ui_tabs():
                                 value=default_sampling_steps,
                                 label="Sampling Steps for each outpaint",
                             )
-                            sampling_step.change(
-                                None,
-                                inputs=[],
-                                outputs=[sampling_step],
-                                _js="monitorThisParam('tab_iz_interface', 'extensions.infinite_zoom', 'steps')")
                         with gr.Row():
                             init_image = gr.Image(
                                 type="pil", label="Custom initial image"
